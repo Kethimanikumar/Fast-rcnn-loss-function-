@@ -1,1 +1,7 @@
-# Fast-rcnn-loss-function-
+Training and Loss Function (RPN) : 
+First of all, we remove all the cross-boundary anchors, so, that they do not increase the loss function. For a typical 1000*600 image, there are roughly 20000(~ 60*40*9) anchors. If we remove the cross-boundary anchors then there are roughly 6000 anchors left per image. The paper also uses Non-Maximum Suppression based on their classification and IoU. Here they use a fixed IoU of 0.7. This also reduces the number of anchors to 2000. The advantage of using Non-Maximum suppression that it also doesn’t hurt accuracy as well. RPN can be trained end to end by using backpropagation and stochastic gradient descent. It generates each mini-batch from the anchors of a single image. It does not train loss function on each anchor instead it selects 256 random anchors with positive and negative sample s in the ratio of 1:1. If an image contains <128 positives then it uses more negative samples. For training RPNs, First, we need to assign binary class label (weather the concerned anchor contains an object or background). In the faster R-CNN paper, the author uses two conditions to assign a positive label to an anchor. These are : 
+ 
+
+those anchors which have the highest Intersection-over-Union (IoU) with a ground-truth box, or
+an anchor that has an IoU overlap higher than 0.7 with any ground-truth box.
+and negative label to those which has IoU overlap is <0.3 for all ground truth boxes. Those anchors which does not have either positive or negative label does not contribute to training. Now Loss function
